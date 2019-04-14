@@ -1,5 +1,5 @@
 # get_blobs --------------------------------------------------------------------
-get_blobs <- function(M, methods = 2:5)
+get_blobs <- function(M, methods = 4:5)
 {
   #kwb.utils::assignPackageObjects("findblobs")
 
@@ -42,13 +42,9 @@ get_blobs <- function(M, methods = 2:5)
 }
 
 # merge_groups -----------------------------------------------------------------
-merge_groups <- function(groups, method = 2)
+merge_groups <- function(groups, method = 4)
 {
-  if (method == 2) {
-    merge_groups_2(groups)
-  } else if (method == 3) {
-    merge_groups_3(groups)
-  } else if (method == 4) {
+  if (method == 4) {
     merge_groups_4(groups)
   } else if (method == 5) {
     merge_groups_5(groups)
