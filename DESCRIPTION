@@ -1,0 +1,17 @@
+Package: findblobs
+Title: R Package to Find Connected Cells (Blobs) in a Matrix of Logical
+Version: 0.0.0.9000
+Authors@R: 
+    c(person(
+      given = "Hauke",
+      family = "Sonnenberg",
+      role = c("aut", "cre"),
+      email = "hauke.sonnenberg@gmx.de"
+    ))
+Description: This package provides functions to find blobs of connected cells
+    in a matrix of logical. This is also known as Blob Colouring.
+License: MIT
+BugReports: https://github.com/hsonne/findblobs/issues
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.1
