@@ -1,5 +1,5 @@
 # get_blobs --------------------------------------------------------------------
-get_blobs <- function(M, methods = 4:5)
+get_blobs <- function(M, methods = 6)
 {
   #kwb.utils::assignPackageObjects("findblobs")
 
@@ -36,7 +36,9 @@ get_blobs <- function(M, methods = 4:5)
     })
   })
 
-  stopifnot(kwb.utils::allAreIdentical(blobs_list))
+  if (length(methods) > 1) {
+    stopifnot(kwb.utils::allAreIdentical(blobs_list))
+  }
 
   blobs_list[[1]]
 }
@@ -48,6 +50,8 @@ merge_groups <- function(groups, method = 4)
     merge_groups_4(groups)
   } else if (method == 5) {
     merge_groups_5(groups)
+  } else if (method == 6) {
+    merge_groups_6(groups)
   } else {
     stop("Unknown method: ", method)
   }

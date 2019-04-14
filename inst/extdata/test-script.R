@@ -41,13 +41,18 @@ if (FALSE)
 
   # Create 100-times blobs from random matrices
   for (i in seq_len(prod(mfrow))) {
-    blob_matrix <- findblobs:::get_blobs(M = (random_matrix(c(5, 5)) == "x"))
+    blob_matrix <- findblobs:::get_blobs(
+      M = (findblobs::random_matrix(c(5, 5)) == "x")
+    )
     findblobs:::plot_integer_matrix(blob_matrix)
   }
 
   for (i in 1:1) {
     message("Test run ", i)
-    blobs <- findblobs:::get_blobs(M = (random_matrix(c(350, 350)) == "x"))
+    blobs <- findblobs:::get_blobs(
+      M = (findblobs::random_matrix(c(200, 200)) == "x"),
+      methods = 4:6
+    )
   }
 
   plot_integer_matrix(blobs)
@@ -83,12 +88,4 @@ if (FALSE)
 
   identical(g2, g5)
   compare_group_lists(g2, g5)
-}
-
-# random_matrix ----------------------------------------------------------------
-random_matrix <- function(matrix_dim = c(10, 10))
-{
-  values <- sample(c("_", "x"), prod(matrix_dim), replace = TRUE)
-
-  matrix(values, nrow = matrix_dim[1])
 }

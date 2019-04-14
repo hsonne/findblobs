@@ -15,8 +15,8 @@
 #'
 plot_integer_matrix <- function(x)
 {
-  old_par <- par(mar = c(1, 1, 1, 1))
-  on.exit(par(old_par))
+  old_par <- graphics::par(mar = c(1, 1, 1, 1))
+  on.exit(graphics::par(old_par))
 
   ids <- setdiff(sort(unique(c(x))), 0)
   colours <- stats::setNames(grDevices::rainbow(length(ids)), ids)

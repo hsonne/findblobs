@@ -2,3 +2,4 @@
 
 export(place_random_blobs)
 export(plot_integer_matrix)
+export(random_matrix)

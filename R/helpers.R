@@ -32,3 +32,18 @@ order_by_first <- function(x)
 
   x[order(sapply(x, "[[", 1))]
 }
+
+# random_matrix ----------------------------------------------------------------
+
+#' Create Matrix with Randomly "Filled" Fields
+#'
+#' @param matrix_dim numeric vector of length two giving the number of rows and
+#'   columns, respectively of the matrix
+#' @export
+#'
+random_matrix <- function(matrix_dim = c(10, 10))
+{
+  values <- sample(c("_", "x"), prod(matrix_dim), replace = TRUE)
+
+  matrix(values, nrow = matrix_dim[1])
+}

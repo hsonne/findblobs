@@ -45,8 +45,7 @@ found_blobs <- findblobs:::get_blobs(M)
 
     ## Getting column blobs ... ok. (0.00s) 
     ## Getting row blobs ... ok. (0.04s) 
-    ## Merging group info with method 4 ... ok. (0.01s) 
-    ## Merging group info with method 5 ... ok. (0.00s)
+    ## Merging group info with method 6 ... ok. (0.01s)
 
 ``` r
 # Plot the blobs. Compare with random_blobs above
