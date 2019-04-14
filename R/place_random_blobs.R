@@ -153,9 +153,6 @@ exclude_positions <- function(positions, exclude = NULL)
   max_col <- max(c(positions[, 2], exclude[, 2]))
 
   # Matrix to lookup number of element at position [row, column]
-  kwb.utils::printIf(TRUE, positions)
-  kwb.utils::printIf(TRUE, exclude)
-
   pos_to_index <- matrix(seq_len(max_row * max_col), nrow = max_row)
 
   wanted <- pos_to_index[positions]
