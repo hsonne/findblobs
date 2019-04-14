@@ -5,49 +5,46 @@ if (FALSE)
 
   set.seed(42)
   # Tetris
-  m <- findblobs:::place_random_blobs(m = empty_matrix, n_blobs = 10,
-                                      min_fields = 4)
+  m <- findblobs::place_random_blobs(
+    m = empty_matrix, n_blobs = 10, min_fields = 4
+  )
 
   # Pentomino
-  m <- findblobs:::place_random_blobs(m = empty_matrix, n_blobs = 10,
-                                      min_fields = 5)
+  m <- findblobs:::place_random_blobs(
+    m = empty_matrix, n_blobs = 5, min_fields = 5
+  )
 }
 
 # Test the recognition of blobs ------------------------------------------------
 if (FALSE)
 {
-  M1 <- matrix(byrow = TRUE, ncol = 3, c(
-    "", "", "x",
-    "", "x", "x",
+  # Define test matrices
+  (M1 <- matrix(byrow = TRUE, ncol = 3, c(
+    "_", "_", "x",
+    "_", "x", "x",
     "x", "x", "x"
-  ))
+  )))
 
-  M2 <- matrix(ncol = 4, byrow = TRUE, c(
-    F, T, T, F,
-    T, T, F, F,
-    T, F, T, T,
-    F, T, T, F
-  ))
+  (M2 <- matrix(ncol = 4, byrow = TRUE, c(
+    "_", "x", "x", "_",
+    "x", "x", "_", "_",
+    "x", "_", "x", "x",
+    "_", "x", "x", "_"
+  )))
 
-  par(mfrow = c(10, 10), mar = c(0, 0, 0, 0))
+  # Define output matrix
+  mfrow <- c(7, 7)
+  par(mfrow = mfrow, mar = c(0, 0, 0, 0))
 
-  for (i in 1:100) {
-    (content <- matrix(sample(c("x", ""), size = 25, replace = TRUE), ncol = 5))
-    plot_integer_matrix(x <- get_blobs(content == "x"))
+  # Create 100-times blobs from random matrices
+  for (i in seq_len(prod(mfrow))) {
+    blob_matrix <- findblobs:::get_blobs(M = (random_matrix(c(5, 5)) == "x"))
+    findblobs:::plot_integer_matrix(blob_matrix)
   }
 
-  matrix_dim <- c(200, 200)
-
-  for (i in 1:1) {
-
+  for (i in 1:3) {
     message("Test run ", i)
-
-    M <- "x" == matrix(
-      nrow = matrix_dim[1],
-      sample(c("_", "x"), prod(matrix_dim), replace = TRUE)
-    )
-
-    blobs <- get_blobs(M)
+    blobs <- findblobs:::get_blobs(M = (random_matrix(c(150, 150)) == "x"))
   }
 
   plot_integer_matrix(blobs, 30)
@@ -83,4 +80,12 @@ if (FALSE)
 
   identical(g2, g5)
   compare_group_lists(g2, g5)
+}
+
+# random_matrix ----------------------------------------------------------------
+random_matrix <- function(matrix_dim = c(10, 10))
+{
+  values <- sample(c("_", "x"), prod(matrix_dim), replace = TRUE)
+
+  matrix(values, nrow = matrix_dim[1])
 }
