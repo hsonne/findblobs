@@ -3,11 +3,14 @@ if (FALSE)
 {
   empty_matrix <- matrix(0L, nrow = 6, ncol = 10)
 
+  set.seed(42)
   # Tetris
-  m <- findblobs:::place_random_blobs(empty_matrix, 10, 4)
+  m <- findblobs:::place_random_blobs(m = empty_matrix, n_blobs = 10,
+                                      min_fields = 4)
 
   # Pentomino
-  m <- findblobs:::place_random_blobs(empty_matrix, 10, 5)
+  m <- findblobs:::place_random_blobs(m = empty_matrix, n_blobs = 10,
+                                      min_fields = 5)
 }
 
 # Test the recognition of blobs ------------------------------------------------
