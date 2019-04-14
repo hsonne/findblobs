@@ -79,7 +79,7 @@ if (FALSE)
   g2 <- order_by_first(merge_groups_2(groups))
   g3 <- order_by_first(merge_groups_3(groups))
   g4 <- order_by_first(merge_groups_4(groups))
-  g5 <- order_by_first(merge_all_groups(groups))
+  g5 <- order_by_first(merge_groups_5(groups))
 
   identical(g2, g5)
   compare_group_lists(g2, g5)

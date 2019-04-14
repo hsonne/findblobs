@@ -1,5 +1,5 @@
 # get_blobs --------------------------------------------------------------------
-get_blobs <- function(M)
+get_blobs <- function(M, methods = 2:5)
 {
   column_blobs <- kwb.utils::catAndRun(
     "Getting column blobs",
@@ -11,58 +11,37 @@ get_blobs <- function(M)
     t(get_column_blobs(t(M), offset = max(column_blobs)))
   )
 
-  #x = column_blobs; y = row_blobs
+  is_set <- column_blobs > 0
 
-  groups_2 <- kwb.utils::catAndRun(
-    "Merging group info with method 2",
-    find_groups(x = column_blobs, y = row_blobs, method = 2)
-  )
+  # Compose information about linked row/column blobs
+  groups <- unique(remove_singles(unname(split(
+    column_blobs[is_set], row_blobs[is_set]
+  ))))
 
-  groups_3 <- kwb.utils::catAndRun(
-    "Merging group info with method 3",
-    find_groups(x = column_blobs, y = row_blobs, method = 3)
-  )
-
-  groups_4 <- kwb.utils::catAndRun(
-    "Merging group info with method 4",
-    find_groups(x = column_blobs, y = row_blobs, method = 4)
-  )
-
-  groups_5 <- kwb.utils::catAndRun(
-    "Merging group info with method 5",
-    find_groups(x = column_blobs, y = row_blobs, method = 5)
-  )
+  # Try different methods of merging the group information
+  groups_list <- lapply(methods, function(method) {
+    kwb.utils::catAndRun(
+      paste("Merging group info with method", method),
+      merge_groups(groups, method = method)
+    )
+  })
 
   dbg <- FALSE
 
-  blobs_2 <- kwb.utils::catAndRun(dbg = dbg, "Applying group info", {
-    apply_group_info(column_blobs, groups_2)
+  blobs_list <- lapply(groups_list, function(groups) {
+    kwb.utils::catAndRun(dbg = dbg, "Applying group info", {
+      apply_group_info(column_blobs, groups)
+    })
   })
 
-  blobs_3 <- kwb.utils::catAndRun(dbg = dbg, "Applying group info", {
-    apply_group_info(column_blobs, groups_3)
-  })
+  stopifnot(kwb.utils::allAreIdentical(blobs_list))
 
-  blobs_4 <- kwb.utils::catAndRun(dbg = dbg, "Applying group info", {
-    apply_group_info(column_blobs, groups_4)
-  })
-
-  blobs_5 <- kwb.utils::catAndRun(dbg = dbg, "Applying group info", {
-    apply_group_info(column_blobs, groups_5)
-  })
-
-  stopifnot(kwb.utils::allAreIdentical(list(blobs_2, blobs_3, blobs_4, blobs_5)))
-
-  blobs_2
+  blobs_list[[1]]
 }
 
-# find_groups ----------------------------------------------------------------
-find_groups <- function(x, y, method = 2)
+# merge_groups -----------------------------------------------------------------
+merge_groups <- function(groups, method = 2)
 {
-  is_set <- x > 0
-
-  groups <- unique(remove_singles(unname(split(x[is_set], y[is_set]))))
-
   if (method == 2) {
     merge_groups_2(groups)
   } else if (method == 3) {
@@ -70,123 +49,10 @@ find_groups <- function(x, y, method = 2)
   } else if (method == 4) {
     merge_groups_4(groups)
   } else if (method == 5) {
-    merge_all_groups(groups)
+    merge_groups_5(groups)
   } else {
     stop("Unknown method: ", method)
   }
-}
-
-# merge_groups_2 ---------------------------------------------------------------
-merge_groups_2 <- function(groups)
-{
-  queue <- seq_along(groups)
-
-  fmt <- "Length(queue): %8d.\n"
-  #cat(sprintf(fmt, 0))
-  backspace <- paste(rep("\b", nchar(fmt) + 5), collapse = "")
-
-  while (length(queue)) {
-
-    i <- queue[1]
-    queue <- queue[-1]
-
-    #cat(paste0(backspace, sprintf(fmt, length(queue))))
-
-    (group <- groups[[i]])
-
-    if (! is.null(group)) {
-
-      (intersects <- sapply(groups, function(x) any(x %in% group)))
-      (indices <- setdiff(which(intersects), i))
-
-      if (length(indices)) {
-        groups[[i]] <- sort(unique(c(group, unlist(groups[indices]))))
-        groups[indices] <- lapply(indices, function(i) NULL)
-        queue <- c(queue, i)
-      }
-    }
-  }
-
-  kwb.utils::excludeNULL(groups)
-}
-
-# merge_groups_3 ---------------------------------------------------------------
-merge_groups_3 <- function(groups)
-{
-  is_queued <- rep(TRUE, length(groups))
-
-  fmt <- "Length(queue): %8d.\n"
-  #cat(sprintf(fmt, 0))
-  backspace <- paste(rep("\b", nchar(fmt) + 5), collapse = "")
-
-  while (sum(is_queued)) {
-
-    #cat(paste0(backspace, sprintf(fmt, sum(is_queued))))
-
-    i <- which(is_queued)[1]
-
-    is_queued[i] <- FALSE
-
-    (group <- groups[[i]])
-
-    if (! is.null(group)) {
-
-      (intersects <- sapply(groups, function(x) any(x %in% group)))
-      (indices <- setdiff(which(intersects), i))
-
-      if (length(indices)) {
-        groups[[i]] <- unique(c(group, unlist(groups[indices])))
-        groups[indices] <- lapply(indices, function(ii) NULL)
-        is_queued[i] <- TRUE
-        is_queued[indices] <- FALSE
-      }
-    }
-  }
-
-  lapply(kwb.utils::excludeNULL(groups), sort)
-}
-
-# merge_groups_4 ---------------------------------------------------------------
-merge_groups_4 <- function(groups)
-{
-  id_frequency <- table(unlist(groups))
-
-  (single_ids <- as.integer(names(id_frequency[id_frequency == 1])))
-
-  if (length(single_ids) == 0) {
-    return(merge_groups_3(groups))
-  }
-
-  i <- which(sapply(groups, function(g) all(g %in% single_ids)))
-
-  if (length(i) == 0) {
-    return(merge_groups_3(groups))
-  }
-
-  #message("\nPutting aside ", length(i), " out of ", length(groups),
-  #        " groups that cannot be merged.")
-
-  new_groups <- if (length(groups) < 50) {
-    merge_groups_2(groups = groups[-i])
-  } else {
-    mid <- length(groups) %/% 2
-    first <- 1:mid
-    g1 <- merge_groups_4(groups[first])
-    g2 <- merge_groups_4(groups[-first])
-    merge_groups_2(c(g1, g2))
-  }
-
-  c(groups[i], new_groups)
-}
-
-# apply_group_info -------------------------------------------------------------
-apply_group_info <- function(column_blobs, groups)
-{
-  for (group in unique(groups)) {
-    column_blobs[column_blobs %in% group] <- group[1]
-  }
-
-  column_blobs
 }
 
 # remove_singles ---------------------------------------------------------------
@@ -202,4 +68,14 @@ remove_singles <- function(x)
   } else {
     x
   }
+}
+
+# apply_group_info -------------------------------------------------------------
+apply_group_info <- function(column_blobs, groups)
+{
+  for (group in unique(groups)) {
+    column_blobs[column_blobs %in% group] <- group[1]
+  }
+
+  column_blobs
 }

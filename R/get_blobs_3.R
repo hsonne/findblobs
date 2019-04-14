@@ -1,5 +1,5 @@
-# merge_all_groups (merge_groups) ----------------------------------------------
-merge_all_groups <- function(groups)
+# merge_groups_5 ---------------------------------------------------------------
+merge_groups_5 <- function(groups)
 {
   stopifnot(is.list(groups))
   # stopifnot(all(! sapply(groups, is.unsorted)))
