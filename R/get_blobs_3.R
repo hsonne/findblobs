@@ -1,19 +1,3 @@
-if (FALSE)
-{
-  bak <- groups
-  head(bak)
-  (groups <- bak[c(1,2,5)])
-  (group <- bak[[4]])
-  (new_groups <- bak[c(4,6)])
-
-  merge_one_into(groups, group)
-  merge_n_into(new_groups, groups)
-  merge_two(bak[[1]], bak[[3]])
-  merge_groups(bak[c(1,3)])
-  merged_groups <- merge_groups(bak)
-  any(sapply(merged_groups[-1], function(x) any(merged_groups[[1]] %in% x)))
-}
-
 # merge_all_groups (merge_groups) ----------------------------------------------
 merge_all_groups <- function(groups)
 {

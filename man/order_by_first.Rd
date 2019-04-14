@@ -13,7 +13,7 @@ order_by_first(x)
 Order List of Vectors by First Vector Elements
 }
 \examples{
-order_by_first(list(
+findblobs:::order_by_first(list(
   c(3, 4),
   c(1, 5, 6),
   c(2, 1)
