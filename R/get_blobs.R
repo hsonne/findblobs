@@ -242,25 +242,3 @@ remove_singles <- function(x)
     x
   }
 }
-
-# get_column_blobs -------------------------------------------------------------
-get_column_blobs <- function(m, offset = 0)
-{
-  n <- nrow(m)
-
-  m_top <- m[-n, ]
-  m_bottom <- m[-1, ]
-
-  which_start <- which(rbind(m[1, ], m_bottom & ! m_top))
-  which_end <- which(rbind(m_top & ! m_bottom, m[n, ]))
-
-  ids <- seq_along(which_start)
-
-  indices <- unlist(lapply(ids, function(i) seq(which_start[i], which_end[i])))
-
-  blobs <- matrix(0L, nrow = nrow(m), ncol = ncol(m))
-  blobs[indices] <- rep(ids + offset, which_end - which_start + 1)
-
-  blobs
-}
-

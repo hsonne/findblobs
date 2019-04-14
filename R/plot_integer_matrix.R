@@ -16,16 +16,16 @@
 plot_integer_matrix <- function(x)
 {
   ids <- setdiff(sort(unique(c(x))), 0)
-  colours <- stats::setNames(rainbow(length(ids)), ids)
+  colours <- stats::setNames(grDevices::rainbow(length(ids)), ids)
 
-  plot(
+  graphics::plot(
     NULL, xlim = c(0, ncol(x)), ylim = c(nrow(x), 0),
     asp = 1, axes = FALSE, xlab = "", ylab = ""
   )
 
   coords <- which(x != 0, arr.ind = TRUE)
 
-  rect(
+  graphics::rect(
     xleft = coords[, "col"] - 1,
     ybottom = coords[, "row"],
     xright = coords[, "col"],
@@ -34,5 +34,5 @@ plot_integer_matrix <- function(x)
     border = NA
   )
 
-  rect(0, 0, ncol(x), nrow(x))
+  graphics::rect(0, 0, ncol(x), nrow(x))
 }
