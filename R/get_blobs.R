@@ -12,28 +12,28 @@ if (FALSE)
     T, F, T, T,
     F, T, T, F
   ))
-  
+
   par(mfrow = c(10, 10), mar = c(0, 0, 0, 0))
-  
+
   for (i in 1:100) {
     (content <- matrix(sample(c("x", ""), size = 25, replace = TRUE), ncol = 5))
     plot_integer_matrix(x <- get_blobs(content == "x"))
   }
-  
+
   matrix_dim <- c(200, 200)
 
   for (i in 1:1) {
-    
+
     message("Test run ", i)
-    
+
     M <- "x" == matrix(
-      nrow = matrix_dim[1], 
+      nrow = matrix_dim[1],
       sample(c("_", "x"), prod(matrix_dim), replace = TRUE)
     )
-    
+
     blobs <- get_blobs(M)
-  }  
-  
+  }
+
   plot_integer_matrix(blobs, 30)
 }
 
@@ -41,39 +41,39 @@ if (FALSE)
 get_blobs <- function(M)
 {
   column_blobs <- kwb.utils::catAndRun(
-    "Getting column blobs", 
+    "Getting column blobs",
     get_column_blobs(M)
   )
-  
+
   row_blobs <- kwb.utils::catAndRun(
-    "Getting row blobs", 
+    "Getting row blobs",
     t(get_column_blobs(t(M), offset = max(column_blobs)))
   )
 
   #x = column_blobs; y = row_blobs
 
   groups_2 <- kwb.utils::catAndRun(
-    "Merging group info with method 2", 
+    "Merging group info with method 2",
     find_groups(x = column_blobs, y = row_blobs, method = 2)
   )
 
   groups_3 <- kwb.utils::catAndRun(
-    "Merging group info with method 3", 
+    "Merging group info with method 3",
     find_groups(x = column_blobs, y = row_blobs, method = 3)
   )
 
   groups_4 <- kwb.utils::catAndRun(
-    "Merging group info with method 4", 
+    "Merging group info with method 4",
     find_groups(x = column_blobs, y = row_blobs, method = 4)
   )
 
   groups_5 <- kwb.utils::catAndRun(
-    "Merging group info with method 5", 
+    "Merging group info with method 5",
     find_groups(x = column_blobs, y = row_blobs, method = 5)
   )
 
   dbg <- FALSE
-  
+
   blobs_2 <- kwb.utils::catAndRun(dbg = dbg, "Applying group info", {
     apply_group_info(column_blobs, groups_2)
   })
@@ -91,7 +91,7 @@ get_blobs <- function(M)
   })
 
   stopifnot(kwb.utils::allAreIdentical(list(blobs_2, blobs_3, blobs_4, blobs_5)))
-  
+
   blobs_2
 }
 
@@ -119,33 +119,33 @@ find_groups <- function(x, y, method = 2)
 merge_groups_2 <- function(groups)
 {
   queue <- seq_along(groups)
-  
+
   fmt <- "Length(queue): %8d.\n"
   #cat(sprintf(fmt, 0))
   backspace <- paste(rep("\b", nchar(fmt) + 5), collapse = "")
-  
+
   while (length(queue)) {
-    
+
     i <- queue[1]
     queue <- queue[-1]
-    
+
     #cat(paste0(backspace, sprintf(fmt, length(queue))))
 
     (group <- groups[[i]])
-    
+
     if (! is.null(group)) {
-      
+
       (intersects <- sapply(groups, function(x) any(x %in% group)))
       (indices <- setdiff(which(intersects), i))
-      
+
       if (length(indices)) {
         groups[[i]] <- sort(unique(c(group, unlist(groups[indices]))))
         groups[indices] <- lapply(indices, function(i) NULL)
         queue <- c(queue, i)
-      }  
+      }
     }
   }
-  
+
   kwb.utils::excludeNULL(groups)
 }
 
@@ -157,31 +157,31 @@ merge_groups_3 <- function(groups)
   fmt <- "Length(queue): %8d.\n"
   #cat(sprintf(fmt, 0))
   backspace <- paste(rep("\b", nchar(fmt) + 5), collapse = "")
-  
+
   while (sum(is_queued)) {
 
     #cat(paste0(backspace, sprintf(fmt, sum(is_queued))))
-    
+
     i <- which(is_queued)[1]
 
     is_queued[i] <- FALSE
-          
+
     (group <- groups[[i]])
-    
+
     if (! is.null(group)) {
-      
+
       (intersects <- sapply(groups, function(x) any(x %in% group)))
       (indices <- setdiff(which(intersects), i))
-      
+
       if (length(indices)) {
         groups[[i]] <- unique(c(group, unlist(groups[indices])))
         groups[indices] <- lapply(indices, function(ii) NULL)
         is_queued[i] <- TRUE
         is_queued[indices] <- FALSE
-      }  
+      }
     }
   }
-  
+
   lapply(kwb.utils::excludeNULL(groups), sort)
 }
 
@@ -189,22 +189,22 @@ merge_groups_3 <- function(groups)
 merge_groups_4 <- function(groups)
 {
   id_frequency <- table(unlist(groups))
-  
+
   (single_ids <- as.integer(names(id_frequency[id_frequency == 1])))
-  
+
   if (length(single_ids) == 0) {
     return(merge_groups_3(groups))
   }
-  
+
   i <- which(sapply(groups, function(g) all(g %in% single_ids)))
-  
+
   if (length(i) == 0) {
     return(merge_groups_3(groups))
   }
-  
-  #message("\nPutting aside ", length(i), " out of ", length(groups), 
+
+  #message("\nPutting aside ", length(i), " out of ", length(groups),
   #        " groups that cannot be merged.")
-  
+
   new_groups <- if (length(groups) < 50) {
     merge_groups_2(groups = groups[-i])
   } else {
@@ -214,7 +214,7 @@ merge_groups_4 <- function(groups)
     g2 <- merge_groups_4(groups[-first])
     merge_groups_2(c(g1, g2))
   }
-  
+
   c(groups[i], new_groups)
 }
 
@@ -224,7 +224,7 @@ apply_group_info <- function(column_blobs, groups)
   for (group in unique(groups)) {
     column_blobs[column_blobs %in% group] <- group[1]
   }
-  
+
   column_blobs
 }
 
@@ -234,7 +234,7 @@ remove_singles <- function(x)
   stopifnot(is.list(x))
 
   is_single <- lengths(x) < 2
-  
+
   if (any(is_single)) {
     #message("Removing ", sum(is_single), " singles.")
     x[! is_single]
@@ -264,28 +264,3 @@ get_column_blobs <- function(m, offset = 0)
   blobs
 }
 
-# plot_integer_matrix ----------------------------------------------------------
-plot_integer_matrix <- function(x, n_cols = 4)
-{
-  #x <- blobs
-  ids <- setdiff(sort(unique(c(x))), 0)
-  colours <- stats::setNames(rainbow(length(ids)), ids)
-  
-  plot(
-    NULL, xlim = c(0, ncol(x)), ylim = c(nrow(x), 0),
-    asp = 1, axes = FALSE, xlab = "", ylab = ""
-  )
-  
-  coords <- which(x != 0, arr.ind = TRUE)
-  
-  rect(
-    xleft = coords[, "col"] - 1,
-    ybottom = coords[, "row"],
-    xright = coords[, "col"],
-    ytop = coords[, "row"] - 1,
-    col = colours[as.character(x[coords])],
-    border = NA
-  )
-  
-  rect(0, 0, ncol(x), nrow(x))
-}
