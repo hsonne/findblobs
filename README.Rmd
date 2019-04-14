@@ -35,7 +35,7 @@ findblobs::plot_integer_matrix(matrix(nrow = 5, byrow = TRUE, c(
 
 ## Create Random Blobs
 
-```{r}
+```{r message = FALSE}
 blob_matrix <- findblobs::place_random_blobs(
   n_blobs = 5, min_fields = 3, max_fields = 10
 )

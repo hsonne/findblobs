@@ -30,14 +30,4 @@ blob_matrix <- findblobs::place_random_blobs(
 )
 ```
 
-    ## Creating blob 1/5 with 10 fields
-
-    ## Creating blob 2/5 with 8 fields
-
-    ## Creating blob 3/5 with 10 fields
-
-    ## Creating blob 4/5 with 9 fields
-
-    ## Creating blob 5/5 with 6 fields
-
 ![](README_files/figure-markdown_github/unnamed-chunk-3-1.png)
