@@ -1,6 +1,8 @@
 # get_blobs --------------------------------------------------------------------
 get_blobs <- function(M, methods = 2:5)
 {
+  #kwb.utils::assignPackageObjects("findblobs")
+
   column_blobs <- kwb.utils::catAndRun(
     "Getting column blobs",
     get_column_blobs(M)

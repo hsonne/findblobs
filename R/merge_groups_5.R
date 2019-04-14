@@ -40,14 +40,14 @@ merge_groups_5 <- function(groups)
 }
 
 # merge_two --------------------------------------------------------------------
-merge_two <- function(a, b, dbg = TRUE)
+merge_two <- function(a, b, dbg = FALSE)
 {
   kwb.utils::printIf(dbg, a)
   kwb.utils::printIf(dbg, b)
 
   if (any(a %in% b)) {
-    sort(unique(c(a, b)))
-    #list(sort(unique(c(a, b))))
+    #sort(unique(c(a, b)))
+    list(sort(unique(c(a, b))))
   } else {
     list(a, b)
   }
