@@ -36,7 +36,21 @@ findblobs::plot_integer_matrix(matrix(nrow = 5, byrow = TRUE, c(
 ## Create Random Blobs
 
 ```{r message = FALSE}
-blob_matrix <- findblobs::place_random_blobs(
+random_blobs <- findblobs::place_random_blobs(
   n_blobs = 5, min_fields = 3, max_fields = 10
 )
 ```
+
+## Find Blobs
+
+```{r}
+# Provide matrix of logical
+M <- random_blobs > 0
+
+# Find the blobs
+found_blobs <- findblobs:::get_blobs(M)
+
+# Plot the blobs. Compare with random_blobs above
+findblobs::plot_integer_matrix(found_blobs)
+```
+

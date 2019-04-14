@@ -9,6 +9,9 @@ if (FALSE)
     m = empty_matrix, n_blobs = 10, min_fields = 4
   )
 
+  findblobs::plot_integer_matrix(findblobs:::get_blobs(m != 0))
+  m
+
   # Pentomino
   m <- findblobs:::place_random_blobs(
     m = empty_matrix, n_blobs = 5, min_fields = 5
