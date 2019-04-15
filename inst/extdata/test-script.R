@@ -47,11 +47,11 @@ if (FALSE)
     findblobs:::plot_integer_matrix(blob_matrix)
   }
 
-  for (i in 1:1) {
+  for (i in 1:3) {
     message("Test run ", i)
     blobs <- findblobs:::get_blobs(
-      M = (findblobs::random_matrix(c(200, 200)) == "x"),
-      methods = 4:6
+      M = (findblobs::random_matrix(c(250, 250)) == "x"),
+      methods = 6:7
     )
   }
 
