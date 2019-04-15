@@ -58,34 +58,50 @@ if (FALSE)
   plot_integer_matrix(blobs)
 }
 
+# Test low level functions -----------------------------------------------------
 if (FALSE)
 {
-  bak <- groups
-  head(bak)
-  (groups <- bak[c(1,2,5)])
-  (group <- bak[[4]])
-  (new_groups <- bak[c(4,6)])
+  M <- findblobs:::place_random_blobs(
+    matrix(0L, nrow = 50, ncol = 80),
+    n_blobs = 10, min_fields = 30, max_fields = 50
+  )
 
-  merge_one_into(groups, group)
-  merge_n_into(new_groups, groups)
-  merge_two(bak[[1]], bak[[3]])
-  merge_groups(bak[c(1,3)])
-  merged_groups <- merge_groups(bak)
+  m <- (M > 0)
+
+  x <- findblobs:::get_column_blobs(m)
+  y <- t(findblobs:::get_column_blobs(t(m), offset = max(x)))
+
+  is_set <- x > 0
+  all_groups <- unique(findblobs:::remove_singles(unname(split(x[is_set], y[is_set]))))
+
+  head(all_groups)
+
+  (groups <- all_groups[c(1, 2, 5)])
+  (group <- all_groups[[4]])
+  (new_groups <- all_groups[c(4, 6)])
+
+  findblobs:::merge_one_into(groups, group)
+  findblobs:::merge_n_into(new_groups, groups)
+  findblobs:::merge_two(all_groups[[1]], all_groups[[2]])
+  findblobs:::merge_groups(all_groups[c(1, 3)])
+
+  merged_groups <- findblobs:::merge_groups(all_groups)
+
   any(sapply(merged_groups[-1], function(x) any(merged_groups[[1]] %in% x)))
 }
 
 if (FALSE)
 {
-  x <- get_column_blobs(M)
-  y <- t(get_column_blobs(t(M), offset = max(column_blobs)))
-  is_set <- x > 0
-  groups <- unique(remove_singles(unname(split(x[is_set], y[is_set]))))
+  groups <- all_groups
 
-  g2 <- order_by_first(merge_groups_2(groups))
-  g3 <- order_by_first(merge_groups_3(groups))
-  g4 <- order_by_first(merge_groups_4(groups))
-  g5 <- order_by_first(merge_groups_5(groups))
+  g4 <- findblobs:::order_by_first(findblobs:::merge_groups_4(groups))
+  g5 <- findblobs:::order_by_first(findblobs:::merge_groups_5(groups))
+  g6 <- findblobs:::order_by_first(findblobs:::merge_groups_6(groups))
+  g7 <- findblobs:::order_by_first(findblobs:::merge_groups_7(groups))
 
-  identical(g2, g5)
-  compare_group_lists(g2, g5)
+  identical(g4, g5)
+  identical(g4, g6)
+  identical(g4, g7)
+
+  findblobs:::compare_group_lists(g4, g5)
 }
