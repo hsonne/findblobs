@@ -50,8 +50,8 @@ if (FALSE)
   for (i in 1:3) {
     message("Test run ", i)
     blobs <- findblobs:::get_blobs(
-      M = (findblobs::random_matrix(c(250, 250)) == "x"),
-      methods = 6:7
+      M = (findblobs::random_matrix(c(200, 200)) == "x"),
+      methods = c(6, 7, 9)
     )
   }
 
@@ -65,6 +65,8 @@ if (FALSE)
     matrix(0L, nrow = 500, ncol = 800),
     n_blobs = 10, min_fields = 500, max_fields = 1000
   )
+
+  M <- findblobs::random_matrix(c(10, 10))
 
   m <- (M > 0)
 
@@ -94,6 +96,7 @@ if (FALSE)
   any(sapply(merged_groups[-1], function(x) any(merged_groups[[1]] %in% x)))
 }
 
+# Test merge_groups_*() --------------------------------------------------------
 if (FALSE)
 {
   groups <- all_groups
@@ -108,4 +111,25 @@ if (FALSE)
   identical(g4, g7)
 
   findblobs:::compare_group_lists(g4, g5)
+}
+
+# Test merge_groups_9 ----------------------------------------------------------
+if (FALSE)
+{
+  m <- (findblobs::random_matrix(c(400, 400)) > 0)
+  x <- findblobs:::get_column_blobs(m)
+  y <- t(findblobs:::get_column_blobs(t(m), offset = max(x)))
+  is_set <- x > 0
+  all_groups <- unname(split(x[is_set], y[is_set]))
+  all_groups <- unique(findblobs:::remove_singles(all_groups))
+
+  (groups <- all_groups)
+
+  length(groups)
+
+  result <- merge_groups_9(groups)
+
+  length(result)
+
+  stopifnot(all(table(unlist(result)) == 1))
 }
