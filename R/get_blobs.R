@@ -56,6 +56,8 @@ merge_groups <- function(groups, method = 4)
     merge_groups_7(groups)
   } else if (method == 8) {
     merge_groups_8(groups)
+  } else if (method == 9) {
+    merge_groups_9(groups)
   } else {
     stop("Unknown method: ", method)
   }
