@@ -50,8 +50,8 @@ if (FALSE)
   for (i in 1:3) {
     message("Test run ", i)
     blobs <- findblobs:::get_blobs(
-      M = (findblobs::random_matrix(c(250, 250)) == "x"),
-      methods = 6:7
+      M = (findblobs::random_matrix(c(150, 150)) == "x"),
+      methods = 6:8
     )
   }
 
