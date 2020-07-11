@@ -12,7 +12,7 @@ name: R-CMD-check
 
 jobs:
   R-CMD-check:
-    runs-on: macOS-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: r-lib/actions/setup-r@master
@@ -24,3 +24,9 @@ jobs:
       - name: Check
         run: rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "error")
         shell: Rscript {0}
+      - name: Test environment variables
+        shell: bash
+        env:
+          GITHUB_PAT: ${{secrets.MY_GITHUB_PAT}}
+        run: |
+          echo GITHUB_PAT: "$GITHUB_PAT"
