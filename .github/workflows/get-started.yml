@@ -28,4 +28,5 @@ jobs:
         shell: bash
         env:
           GITHUB_PAT: ${{secrets.MY_GITHUB_PAT}}
-        run: echo "GITHUB_PAT: $GITHUB_PAT"
+        run: |
+          echo GITHUB_PAT: "$GITHUB_PAT"
