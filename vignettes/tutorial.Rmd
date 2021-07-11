@@ -1,18 +1,20 @@
 ---
-title: "README"
-author: "Hauke Sonnenberg"
-date: "14 April 2019"
-output: 
-  md_document:
-    variant: markdown_github
-editor_options: 
-  chunk_output_type: console
+title: "Tutorial"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
 set.seed(42)
 ```
+
 
 ## Installation
 
@@ -53,4 +55,3 @@ found_blobs <- findblobs:::get_blobs(M)
 # Plot the blobs. Compare with random_blobs above
 findblobs::plot_integer_matrix(found_blobs)
 ```
-
