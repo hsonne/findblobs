@@ -14,7 +14,7 @@ if (FALSE)
 # merge_groups_8 ---------------------------------------------------------------
 merge_groups_8 <- function(groups)
 {
-  L <- findblobs:::groups_to_link_matrix(groups)
+  L <- groups_to_link_matrix(groups)
   row_state <- rep(0L, nrow(L))
   state_seen <- 1L
   state_used <- 2L

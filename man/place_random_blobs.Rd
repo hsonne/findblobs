@@ -4,8 +4,13 @@
 \alias{place_random_blobs}
 \title{Create Random Blobs in a Matrix}
 \usage{
-place_random_blobs(m = matrix(0L, nrow = 10, ncol = 15), n_blobs = 5,
-  min_fields = 3, max_fields = min_fields, do_plot = TRUE)
+place_random_blobs(
+  m = matrix(0L, nrow = 10, ncol = 15),
+  n_blobs = 5,
+  min_fields = 3,
+  max_fields = min_fields,
+  do_plot = TRUE
+)
 }
 \arguments{
 \item{m}{matrix of integer in which to place blobs. Default: 10 x 15-Matrix}
