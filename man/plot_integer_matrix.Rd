@@ -4,7 +4,7 @@
 \alias{plot_integer_matrix}
 \title{Plot Matrix of Integer as Coloured Squares}
 \usage{
-plot_integer_matrix(x)
+plot_integer_matrix(x, colours = NULL)
 }
 \arguments{
 \item{x}{matrix of integer}
