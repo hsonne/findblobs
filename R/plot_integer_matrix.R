@@ -13,13 +13,16 @@
 #'   2, 2, 2, 2, 2
 #' )))
 #'
-plot_integer_matrix <- function(x)
+plot_integer_matrix <- function(x, colours = NULL)
 {
   old_par <- graphics::par(mar = c(1, 1, 1, 1))
   on.exit(graphics::par(old_par))
 
   ids <- setdiff(sort(unique(c(x))), 0)
-  colours <- stats::setNames(grDevices::rainbow(length(ids)), ids)
+
+  if (is.null(colours)) {
+    colours <- stats::setNames(grDevices::rainbow(length(ids)), ids)
+  }
 
   graphics::plot(
     NULL, xlim = c(0, ncol(x)), ylim = c(nrow(x), 0),
